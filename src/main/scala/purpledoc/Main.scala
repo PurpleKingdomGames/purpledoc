@@ -52,7 +52,7 @@ object Main:
   ) =
     go(input, nolink.value)
 
-  def main(args: Array[String]): Unit = ParserForMethods(this).runOrExit(args)
+  def main(args: Array[String]): Unit = ParserForMethods(this).runOrExit(args.toIndexedSeq)
 
   def go(input: String, noLink: Boolean): Unit =
     val wd =
@@ -73,17 +73,10 @@ object Main:
         case head :: tail =>
           ProjectTree.Branch("root", tail)
 
-    println("Found projects:")
-    println(projectTree.prettyPrint)
-
-    // println("Leaf nodes:")
-    // println(trees.flatMap(_.toList).map(_.name).mkString("\n"))
-
-    // println("Metadata:")
-    // println(trees.flatMap(_.toList).map(_.toMetadata(wd)).mkString("\n"))
+    val config = Config.load(wd)
 
     SiteGenerator.makeDemoSite(wd, projectTree, !noLink)
 
-    DocGenerator.generateDocs(wd, projectTree)
+    DocGenerator.generateDocs(wd, wd / config.outputs.docs, projectTree)
 
     println("Done")

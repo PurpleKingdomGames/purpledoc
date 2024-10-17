@@ -4,34 +4,38 @@ import purpledoc.datatypes.ProjectTree
 
 object DocGenerator:
 
-  def generateDocs(wd: os.Path, projects: ProjectTree): Unit =
+  def generateDocs(wd: os.Path, output: os.Path, projects: ProjectTree): Unit =
     println("Generating docs.")
 
-    val firstProject = projects.toList.headOption.map(_.toMetadata).get
+    if !os.exists(output) then
+      println("ERROR: Output directory does not exist: " + output.toString)
+      sys.exit(1)
 
-    println("Project at: " + firstProject.srcPath)
+    projects.toList
+      .map(_.toMetadata)
+      .foreach: project =>
+        println("> Producing docs for: " + project.name)
 
-    val pageHeader =
-      if os.exists(wd / firstProject.srcPath / "README.md") then
-        println("> Using README.md as the header.")
-        os.read(wd / firstProject.srcPath / "README.md")
-      else
-        println("> No README.md found, using default header.")
-        s"# ${Templates.cleanUpName(firstProject.name)}\n\n"
+        val pageHeader =
+          if os.exists(wd / project.srcPath / "README.md") then
+            os.read(wd / project.srcPath / "README.md")
+          else
+            println("> No README.md found, using default header.")
+            s"# ${Templates.cleanUpName(project.name)}\n\n"
 
-    // println(pageHeader)
+        val scalaFiles = os.walk(wd / project.srcPath).filter(_.ext == "scala")
 
-    val scalaFiles = os.walk(wd / firstProject.srcPath).filter(_.ext == "scala")
+        val comments = scalaFiles.flatMap { file =>
+          val lines = os.read.lines(file)
+          val comments =
+            lines.map(_.trim).filter(_.trim.startsWith("//")).map(_.replaceFirst("//", "").trim)
 
-    // println(scalaFiles.mkString("\n"))
+          comments.toList
+        }
 
-    val comments = scalaFiles.flatMap { file =>
-      val lines = os.read.lines(file)
-      val comments =
-        lines.map(_.trim).filter(_.trim.startsWith("//")).map(_.replaceFirst("//", "").trim)
+        val contents = pageHeader + comments.mkString("\n\n")
 
-      comments.toList
-    }
+        os.makeDir.all(output / project.srcPath)
+        os.write.over(output / project.srcPath / "index.md", contents)
 
-    println("Page:")
-    println(pageHeader + comments.mkString("\n"))
+        ()
