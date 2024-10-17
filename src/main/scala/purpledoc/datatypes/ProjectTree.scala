@@ -10,7 +10,7 @@ enum ProjectTree:
   def prettyPrint(level: Int): String =
     this match
       case ProjectTree.Branch(name, children) =>
-        val indent = "  " * level
+        val indent   = "  " * level
         val childStr = children.map(_.prettyPrint(level + 1)).mkString("\n")
         s"$indent$name\n$childStr"
 
@@ -50,11 +50,11 @@ enum ProjectTree:
 object ProjectTree:
 
   extension (leaf: ProjectTree.Leaf)
-    def toMetadata(projectRoot: os.Path): ProjectMetadata =
+    def toMetadata: ProjectMetadata =
       ProjectMetadata(
         leaf.path,
         leaf.path.mkString("."),
-        projectRoot / os.RelPath(leaf.path.mkString("/"))
+        os.RelPath(leaf.path.mkString("/"))
       )
 
   def pathToProjectTree(path: List[String]): ProjectTree =
@@ -125,8 +125,7 @@ object ProjectTree:
           ) =>
         List(b1, b2)
 
-      case (ProjectTree.Leaf(nameA, p), ProjectTree.Leaf(nameB, _))
-          if nameA == nameB =>
+      case (ProjectTree.Leaf(nameA, p), ProjectTree.Leaf(nameB, _)) if nameA == nameB =>
         List(ProjectTree.Leaf(nameA, p))
 
       case (ProjectTree.Branch(nameA, childrenA), ProjectTree.Leaf(nameB, p)) =>

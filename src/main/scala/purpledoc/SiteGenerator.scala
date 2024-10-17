@@ -1,15 +1,19 @@
 package purpledoc
 
+import purpledoc.datatypes.ProjectTree
+
 object SiteGenerator:
 
   // TODO: Base this on the tree structure so that you can have nicely nested projects lists on the contents page.
   // LinkAll is a flag to build all the shaders before generating the site
-  def makeDemoSite(linkAll: Boolean, projectList: List[String], wd: os.Path) =
+  def makeDemoSite(linkAll: Boolean, projects: ProjectTree, wd: os.Path) =
+    val projectList = projects.toList.map(_.toMetadata)
+
     // Build all the shaders
     if linkAll then
       println("Building all projects.")
       projectList.foreach { pjt =>
-        os.proc("./mill", s"$pjt.buildGameFull").call(cwd = wd)
+        os.proc("./mill", s"${pjt.millPath}.buildGameFull").call(cwd = wd)
       }
     else println("Skipping project builds.")
 
@@ -20,9 +24,7 @@ object SiteGenerator:
 
     // Generate relative paths
     val projectListRelPaths: List[os.RelPath] =
-      projectList.map { p =>
-        os.RelPath(p.replace(".", "/"))
-      }
+      projectList.map(_.srcPath)
 
     // Copy all the built shaders into the right docs directory
     projectListRelPaths.foreach { p =>
@@ -49,5 +51,5 @@ object SiteGenerator:
     // Build an index page with links to all the sub folders
     os.write(
       docs / "index.html",
-      HomePage.page(projectListRelPaths.map(_.toString()))
+      HomePage.page(projects)
     )

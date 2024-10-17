@@ -1,16 +1,17 @@
 package purpledoc
 
 import scalatags.Text.all._
+import purpledoc.datatypes.ProjectTree
 
 object HomePage {
 
-  def page(projectList: List[String]) =
+  def page(projectTree: ProjectTree) =
     "<!DOCTYPE html>" +
       html(
         head(title := "Ultraviolet Examples")(
           meta(charset := "UTF-8"),
           link(
-            rel := "stylesheet",
+            rel  := "stylesheet",
             href := "https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
           )
         ),
@@ -19,37 +20,37 @@ object HomePage {
           p(
             "Click on any of the links below."
           ),
-          projectList
-            .map(_.split("/").toList.drop(1))
-            .map {
-              case category :: names =>
-                category -> names.mkString("/")
-
-              case unexpected =>
-                throw new Exception(
-                  "Failed trying to convert this to a tuple: " + unexpected
-                )
-            }
-            .groupBy(_._1)
-            .toList
-            .map(p => p._1 -> p._2.map(_._2))
-            .map { case (category, sections) =>
-              div()(
-                p(category.capitalize),
-                ul()(
-                  sections.map { prj =>
-                    li(
-                      a(href := s"./shaders/$category/$prj")(
-                        prj.replace("-", " ").capitalize
-                      )
-                    )
-                  }
-                )
-              )
-            }
+          div()(
+            ul()(
+              projectTreeToHtml(projectTree)
+            )
+          )
         )
       )
 
+  def projectTreeToHtml(projectTree: ProjectTree): Frag =
+    projectTree match {
+      case ProjectTree.Branch(name, children) =>
+        li(cleanUpName(name))(
+          ul()(
+            children.map(projectTreeToHtml)
+          )
+        )
+
+      case l @ ProjectTree.Leaf(name, _) =>
+        val metadata = l.toMetadata
+        li()(
+          a(href := s"./${metadata.srcPath}")(
+            cleanUpName(name)
+          )
+        )
+
+      case ProjectTree.Empty =>
+        div()
+    }
+
+  def cleanUpName(name: String): String =
+    name.replace("-", " ").capitalize
 }
 
 object IndigoIndex {
@@ -60,7 +61,7 @@ object IndigoIndex {
         head(title := pageName)(
           meta(charset := "UTF-8"),
           link(
-            rel := "stylesheet",
+            rel  := "stylesheet",
             href := "https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
           )
         ),

@@ -8,9 +8,9 @@ import mainargs.{main, arg, ParserForMethods, Flag}
 TODO:
 
 As application...
-- Move to separate repo. DONE
-- Build jar / native - DONE
-- Setup alias - DONE
+- DONE - Move to separate repo
+- DONE - Build jar / native
+- DONE - Setup alias
 
 Purpledocs
 - Config in repo
@@ -19,7 +19,7 @@ Purpledocs
 - Docs output
 
 Live examples site
-- Live examples site contents tree should be nicely nested, based on the project tree.
+- DONE - Live examples site contents tree should be nicely nested, based on the project tree.
 
 Documentation scraper
 - Find READMEs
@@ -62,9 +62,19 @@ object Main:
     val projectList = MillProjectLister.buildProjectList(wd)
     val trees =
       ProjectTree.combineTrees(projectList.map(ProjectTree.stringToProjectTree))
+    val projectTree =
+      trees match
+        case Nil =>
+          ProjectTree.Empty
+
+        case head :: Nil =>
+          head
+
+        case head :: tail =>
+          ProjectTree.Branch("root", tail)
 
     println("Found projects:")
-    println(trees.map(_.prettyPrint).mkString("\n"))
+    println(projectTree.prettyPrint)
 
     // println("Leaf nodes:")
     // println(trees.flatMap(_.toList).map(_.name).mkString("\n"))
@@ -73,6 +83,6 @@ object Main:
     // println(trees.flatMap(_.toList).map(_.toMetadata(wd)).mkString("\n"))
 
     println("Building demo site...")
-    SiteGenerator.makeDemoSite(!noLink, projectList, wd)
+    SiteGenerator.makeDemoSite(!noLink, projectTree, wd)
 
     println("Done")
