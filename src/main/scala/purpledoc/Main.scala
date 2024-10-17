@@ -9,13 +9,12 @@ TODO:
 
 As application...
 - Move to separate repo. DONE
-- Build jar / native
-- Setup alias
+- Build jar / native - DONE
+- Setup alias - DONE
 
 Purpledocs
 - Config in repo
 - Config load / validation
-- Input
 - Live site output
 - Docs output
 
@@ -40,7 +39,10 @@ object Main:
 
   @main
   def run(
-      @arg(short = 'i', doc = "Path to the project root")
+      @arg(
+        short = 'i',
+        doc = "Path to the project root"
+      ) // TODO: Can this be set up to not need the flag?
       input: String,
       @arg(
         doc =
