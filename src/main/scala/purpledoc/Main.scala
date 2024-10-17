@@ -22,11 +22,11 @@ Live examples site
 - DONE - Live examples site contents tree should be nicely nested, based on the project tree.
 
 Documentation scraper
-- Find READMEs
+- DONE - Find READMEs
 - Front matter? What do docusaurus and Hugo ask for?
-- Guess the project title / fallback based on project name, if not in front matter or README.md
-- Collect all scala files
-- scrape comments
+- DONE - Guess the project title / fallback based on project name, if not in front matter or README.md
+- DONE - Collect all scala files
+- DONE - scrape comments
 - scape snippets
 - Output markdown file
   - Front matter (format?)
@@ -82,7 +82,8 @@ object Main:
     // println("Metadata:")
     // println(trees.flatMap(_.toList).map(_.toMetadata(wd)).mkString("\n"))
 
-    println("Building demo site...")
-    SiteGenerator.makeDemoSite(!noLink, projectTree, wd)
+    SiteGenerator.makeDemoSite(wd, projectTree, !noLink)
+
+    DocGenerator.generateDocs(wd, projectTree)
 
     println("Done")

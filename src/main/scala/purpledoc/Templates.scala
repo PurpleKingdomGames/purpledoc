@@ -3,6 +3,12 @@ package purpledoc
 import scalatags.Text.all._
 import purpledoc.datatypes.ProjectTree
 
+object Templates:
+
+  def cleanUpName(name: String): String =
+    name.replace("-", " ").capitalize
+
+
 object HomePage {
 
   def page(projectTree: ProjectTree) =
@@ -31,7 +37,7 @@ object HomePage {
   def projectTreeToHtml(projectTree: ProjectTree): Frag =
     projectTree match {
       case ProjectTree.Branch(name, children) =>
-        li(cleanUpName(name))(
+        li(Templates.cleanUpName(name))(
           ul()(
             children.map(projectTreeToHtml)
           )
@@ -41,16 +47,13 @@ object HomePage {
         val metadata = l.toMetadata
         li()(
           a(href := s"./${metadata.srcPath}")(
-            cleanUpName(name)
+            Templates.cleanUpName(name)
           )
         )
 
       case ProjectTree.Empty =>
         div()
     }
-
-  def cleanUpName(name: String): String =
-    name.replace("-", " ").capitalize
 }
 
 object IndigoIndex {

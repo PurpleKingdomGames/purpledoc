@@ -52,6 +52,7 @@ object ProjectTree:
   extension (leaf: ProjectTree.Leaf)
     def toMetadata: ProjectMetadata =
       ProjectMetadata(
+        leaf.name,
         leaf.path,
         leaf.path.mkString("."),
         os.RelPath(leaf.path.mkString("/"))

@@ -4,9 +4,9 @@ import purpledoc.datatypes.ProjectTree
 
 object SiteGenerator:
 
-  // TODO: Base this on the tree structure so that you can have nicely nested projects lists on the contents page.
   // LinkAll is a flag to build all the shaders before generating the site
-  def makeDemoSite(linkAll: Boolean, projects: ProjectTree, wd: os.Path) =
+  def makeDemoSite(wd: os.Path, projects: ProjectTree, linkAll: Boolean) =
+    println("Building demo site...")
     val projectList = projects.toList.map(_.toMetadata)
 
     // Build all the shaders
