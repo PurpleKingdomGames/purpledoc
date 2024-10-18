@@ -1,6 +1,7 @@
 package purpledoc
 
 import purpledoc.datatypes.ProjectTree
+import scala.annotation.tailrec
 
 object DocGenerator:
 
@@ -25,13 +26,7 @@ object DocGenerator:
 
         val scalaFiles = os.walk(wd / project.srcPath).filter(_.ext == "scala")
 
-        val comments = scalaFiles.flatMap { file =>
-          val lines = os.read.lines(file)
-          val comments =
-            lines.map(_.trim).filter(_.trim.startsWith("//")).map(_.replaceFirst("//", "").trim)
-
-          comments.toList
-        }
+        val comments = scalaFiles.flatMap(extractComments)
 
         val contents = pageHeader + comments.mkString("\n\n")
 
@@ -39,3 +34,26 @@ object DocGenerator:
         os.write.over(output / project.srcPath / "index.md", contents)
 
         ()
+
+  def extractComments(file: os.Path): List[String] =
+    @tailrec
+    def rec(remaining: List[String], acc: List[String]): List[String] =
+      remaining match
+        case Nil =>
+          acc
+
+        // Multi-line comment on one line
+        case l :: ls if l.contains("/*") && l.contains("*/") =>
+          val after   = l.splitAt(l.indexOf("/*") + 2)._2
+          val comment = after.splitAt(after.indexOf("*/"))._1.trim
+
+          rec(ls, comment :: acc)
+
+        // Single line comment
+        case l :: ls if l.trim.startsWith("//") =>
+          rec(ls, l.trim.replaceFirst("//", "").trim :: acc)
+
+        case l :: ls =>
+          rec(ls, acc)
+
+    rec(os.read.lines(file).toList, Nil)
