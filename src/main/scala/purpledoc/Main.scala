@@ -36,7 +36,11 @@ Documentation scraper
 
 Static pages
 - Define a directory for static pages in the config
-- Copy all files from that directory to the output directory
+- Copy all files from that directory to the output directory (configurable)
+
+Static asset copying
+- Define a directory for static assets in the config
+- Copy all files from that directory to the output directory (configurable)
 
 Variables
 - Including
