@@ -19,7 +19,7 @@ object DocGenerator:
 
         val pageHeader =
           if os.exists(wd / project.srcPath / "README.md") then
-            os.read(wd / project.srcPath / "README.md")
+            os.read(wd / project.srcPath / "README.md") + "\n\n"
           else
             println("> No README.md found, using default header.")
             s"# ${Templates.cleanUpName(project.name)}\n\n"
@@ -37,7 +37,7 @@ object DocGenerator:
 
   def extractComments(file: os.Path): List[String] =
     @tailrec
-    def rec(remaining: List[String], acc: List[String]): List[String] =
+    def rec(remaining: List[String], multiline: List[String], acc: List[String]): List[String] =
       remaining match
         case Nil =>
           acc
@@ -47,13 +47,49 @@ object DocGenerator:
           val after   = l.splitAt(l.indexOf("/*") + 2)._2
           val comment = after.splitAt(after.indexOf("*/"))._1.trim
 
-          rec(ls, comment :: acc)
+          rec(ls, Nil, acc :+ comment)
+
+        // Multi-line comment start
+        case l :: ls if l.contains("/*") =>
+          val after = l.splitAt(l.indexOf("/*") + 2)._2
+
+          // If we find one multi-line comment start within another,
+          // we just drop the first one, considering this an error case.
+          // Either it was an error and we just take up to the next close,
+          // Or it was a nested comment, and we end up just taking the inner one.
+          // Either way, it's degenerate and we don't care.
+          rec(ls, after.trim :: Nil, acc)
+
+        // Multi-line comment end
+        case l :: ls if l.contains("*/") =>
+          val before = l.splitAt(l.indexOf("*/"))._1.trim
+
+          val cleaned =
+            if multiline.forall(_.startsWith("*")) then
+              multiline.map(_.replaceFirst("\\*", "").trim)
+            else multiline.map(_.trim)
+
+          rec(ls, Nil, acc :+ cleaned.mkString("\n") :+ before)
+
+        // Single line comment that denotes the start of a multi-line code grab
+        case l :: ls
+            if (l.trim.startsWith("//```") || l.trim.startsWith("// ```")) && multiline.isEmpty =>
+          rec(ls, l.trim.replaceFirst("//", "").trim :: Nil, acc)
+
+        // Single line comment that denotes the end of a multi-line code grab
+        case l :: ls if l.trim.startsWith("//```") || l.trim.startsWith("// ```") =>
+          val contents = multiline :+ l.trim.replaceFirst("//", "").trim
+          rec(ls, Nil, acc :+ contents.mkString("\n"))
+
+        // Multi-line comment middle (also works for code grabs)
+        case l :: ls if multiline.nonEmpty =>
+          rec(ls, multiline :+ l.trim, acc)
 
         // Single line comment
         case l :: ls if l.trim.startsWith("//") =>
-          rec(ls, l.trim.replaceFirst("//", "").trim :: acc)
+          rec(ls, Nil, acc :+ l.trim.replaceFirst("//", "").trim)
 
         case l :: ls =>
-          rec(ls, acc)
+          rec(ls, Nil, acc)
 
-    rec(os.read.lines(file).toList, Nil)
+    rec(os.read.lines(file).toList, Nil, Nil).map(_.trim).filterNot(_.isEmpty())
