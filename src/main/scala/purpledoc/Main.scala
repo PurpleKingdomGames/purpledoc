@@ -13,10 +13,10 @@ As application...
 - DONE - Setup alias
 
 Purpledocs
-- Config in repo
-- Config load / validation
-- Live site output
-- Docs output
+- DONE - Config in repo
+- DONE - Config load / validation
+- DONE - Live site output
+- DONE - Docs output
 
 Live examples site
 - DONE - Live examples site contents tree should be nicely nested, based on the project tree.
@@ -27,11 +27,25 @@ Documentation scraper
 - DONE - Guess the project title / fallback based on project name, if not in front matter or README.md
 - DONE - Collect all scala files
 - DONE - scrape comments
-- scape snippets
-- Output markdown file
+- DONE scape snippets
+- DONE - Output markdown file
   - Front matter (format?)
-  - README contents
-  - Append comments and snippets
+  - DONE - README contents
+  - DONE - Append comments
+  - DONE - ...and snippets
+
+Static pages
+- Define a directory for static pages in the config
+- Copy all files from that directory to the output directory
+
+Variables
+- Including
+  - Scala version
+  - Scala.js version
+  - Indigo version
+  - Ultraviolet version
+  - etc.
+- A way to use them in the contents of the site
 
  */
 
