@@ -120,8 +120,6 @@ object WebsiteGenerator:
         )
       )
       .site
-      .tableOfContent(title = "Contents", depth = 2)
-      .site
       .internalCSS(Root / "css" / "custom.css")
       .site
       .favIcons(
