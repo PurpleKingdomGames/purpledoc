@@ -7,41 +7,6 @@ import mainargs.{main, arg, ParserForMethods, Flag}
 /*
 TODO:
 
-As application...
-- DONE - Move to separate repo
-- DONE - Build jar / native
-- DONE - Setup alias
-
-Purpledocs
-- DONE - Config in repo
-- DONE - Config load / validation
-- DONE - Live site output
-- DONE - Docs output
-
-Live examples site
-- DONE - Live examples site contents tree should be nicely nested, based on the project tree.
-
-Documentation scraper
-- DONE - Find READMEs
-- Front matter? What do docusaurus and Hugo ask for?
-- DONE - Guess the project title / fallback based on project name, if not in front matter or README.md
-- DONE - Collect all scala files
-- DONE - scrape comments
-- DONE scape snippets
-- DONE - Output markdown file
-  - Front matter (format?)
-  - DONE - README contents
-  - DONE - Append comments
-  - DONE - ...and snippets
-
-Static pages
-- DONE - Define a directory for static pages in the config
-- DONE - Copy all files from that directory to the output directory (configurable)
-
-Static asset copying
-- DON'T NEED - Define a directory for static assets in the config
-- DON'T NEED - Copy all files from that directory to the output directory (configurable)
-
 Variables
 - Including
   - Scala version
@@ -55,6 +20,13 @@ Self links:
   - Link to this example
   - Edit this page.
   - Anything else?
+
+More purpledoc config for site params:
+  - Title
+  - Description
+  - Author
+  - Version
+  - etc.
 
  */
 
