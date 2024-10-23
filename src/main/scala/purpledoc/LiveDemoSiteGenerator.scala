@@ -2,10 +2,10 @@ package purpledoc
 
 import purpledoc.datatypes.ProjectTree
 
-object SiteGenerator:
+object LiveDemoSiteGenerator:
 
   // LinkAll is a flag to build all the shaders before generating the site
-  def makeDemoSite(wd: os.Path, projects: ProjectTree, linkAll: Boolean) =
+  def makeDemoSite(wd: os.Path, liveDemos: os.Path, projects: ProjectTree, linkAll: Boolean) =
     println("Building demo site...")
     val projectList = projects.toList.map(_.toMetadata)
 
@@ -18,17 +18,16 @@ object SiteGenerator:
     else println("Skipping project builds.")
 
     // Recreate the docs directory
-    val docs = wd / "docs"
-    os.remove.all(docs)
-    os.makeDir.all(docs)
+    os.remove.all(liveDemos)
+    os.makeDir.all(liveDemos)
 
     // Generate relative paths
     val projectListRelPaths: List[os.RelPath] =
       projectList.map(_.srcPath)
 
-    // Copy all the built shaders into the right docs directory
+    // Copy all the built shaders into the right liveDemos directory
     projectListRelPaths.foreach { p =>
-      val outPath = (wd / "docs") / p
+      val outPath = liveDemos / p
       os.makeDir.all(outPath)
 
       val buildDir = wd / "out" / p / "indigoBuildFull.dest"
@@ -50,6 +49,6 @@ object SiteGenerator:
 
     // Build an index page with links to all the sub folders
     os.write(
-      docs / "index.html",
+      liveDemos / "index.html",
       HomePage.page(projects)
     )

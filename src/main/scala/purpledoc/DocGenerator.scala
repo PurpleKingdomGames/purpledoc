@@ -5,12 +5,11 @@ import scala.annotation.tailrec
 
 object DocGenerator:
 
-  def generateDocs(wd: os.Path, output: os.Path, projects: ProjectTree): Unit =
+  def generateDocs(wd: os.Path, generatedDocsOut: os.Path, projects: ProjectTree): Unit =
     println("Generating docs.")
 
-    if !os.exists(output) then
-      println("ERROR: Output directory does not exist: " + output.toString)
-      sys.exit(1)
+    if !os.exists(generatedDocsOut) then
+      os.makeDir.all(generatedDocsOut)
 
     projects.toList
       .map(_.toMetadata)
@@ -30,8 +29,8 @@ object DocGenerator:
 
         val contents = pageHeader + comments.mkString("\n\n")
 
-        os.makeDir.all(output / project.srcPath)
-        os.write.over(output / project.srcPath / "index.md", contents)
+        os.makeDir.all(generatedDocsOut / project.srcPath)
+        os.write.over(generatedDocsOut / project.srcPath / "index.md", contents)
 
         ()
 
