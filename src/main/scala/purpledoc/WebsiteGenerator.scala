@@ -127,4 +127,9 @@ object WebsiteGenerator:
       .favIcons(
         Favicon.internal(Root / "img" / "favicon.png", sizes = "32x32")
       )
+      .site
+      .mainNavigation(
+        depth = 6,
+        includePageSections = false
+      )
       .build

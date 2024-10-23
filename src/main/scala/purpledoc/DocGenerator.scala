@@ -8,8 +8,7 @@ object DocGenerator:
   def generateDocs(wd: os.Path, generatedDocsOut: os.Path, projects: ProjectTree): Unit =
     println("Generating docs.")
 
-    if !os.exists(generatedDocsOut) then
-      os.makeDir.all(generatedDocsOut)
+    if !os.exists(generatedDocsOut) then os.makeDir.all(generatedDocsOut)
 
     projects.toList
       .map(_.toMetadata)
@@ -30,9 +29,30 @@ object DocGenerator:
         val contents = pageHeader + comments.mkString("\n\n")
 
         os.makeDir.all(generatedDocsOut / project.srcPath)
-        os.write.over(generatedDocsOut / project.srcPath / "index.md", contents)
+        os.write.over(generatedDocsOut / project.srcPath / "README.md", contents)
 
         ()
+
+    os.walk(generatedDocsOut).foreach { p =>
+      if os.isDir(p) && !os.list(p).exists(_.ext == "md") then
+        val subdirs =
+          os.list(p)
+            .filter(os.isDir)
+            .toList
+            .map(_.last)
+            .map(dir => s"[$dir]($dir/README.md)")
+            .mkString("  - ", "\n  - ", "")
+
+        val contents =
+          s"""# ${p.last.capitalize}
+          |
+          |$subdirs
+          |""".stripMargin
+
+        os.write(p / "README.md", contents)
+
+        if os.exists(p / ".gitkeep") then os.remove(p / ".gitkeep")
+    }
 
   def extractComments(file: os.Path): List[String] =
     @tailrec
