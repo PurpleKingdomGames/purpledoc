@@ -34,13 +34,18 @@ final case class Outputs(destination: String) derives YamlCodec
 final case class WebSiteConfig(
     title: String,
     description: String,
-    logo: TopNavLogo
+    topNavLogo: TopNavLogo,
+    logo: Logo
 ) derives YamlCodec
 
 final case class TopNavLogo(
     image: String,
     width: Double,
     height: Double
+) derives YamlCodec
+
+final case class Logo(
+    image: String
 ) derives YamlCodec
 
 final case class RepoConfig(

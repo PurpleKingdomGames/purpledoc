@@ -71,7 +71,7 @@ object WebsiteGenerator:
         primaryLight = Color.hex("e4e4e4"),
         text = Color.hex("5f5f5f"),
         background = Color.hex("ffffff"),
-        bgGradient = (Color.hex("095269"), Color.hex("007c99"))
+        bgGradient = (Color.hex("29016a"), Color.hex("ffffff"))
       )
       .site
       .darkMode
@@ -106,11 +106,11 @@ object WebsiteGenerator:
         homeLink = ImageLink.internal(
           Root / "documentation" / "README.md",
           Image.internal(
-            Root / "img" / config.website.logo.image,
+            Root / "img" / config.website.topNavLogo.image,
             alt = Some(config.website.description),
             title = Some(config.website.title),
-            width = Some(Length(150.0, LengthUnit.px)),
-            height = Some(Length(50.0, LengthUnit.px))
+            width = Some(Length(config.website.topNavLogo.width, LengthUnit.px)),
+            height = Some(Length(config.website.topNavLogo.height, LengthUnit.px))
           )
         ),
         navLinks = Seq(
@@ -128,5 +128,51 @@ object WebsiteGenerator:
       .mainNavigation(
         depth = 6,
         includePageSections = false
+      )
+      .site
+      .landingPage(
+        logo = Some(
+          Image.internal(
+            Root / "img" / config.website.logo.image,
+            alt = Some(config.website.description),
+            title = Some(config.website.title)
+          )
+        ),
+        title = Some(config.website.title),
+        subtitle = Some(config.website.description),
+        latestReleases = Seq(
+          ReleaseInfo("Latest Stable Release", "2.3.5"),
+          ReleaseInfo("Latest Milestone Release", "2.4.0-M2")
+        ),
+        license = Some("MIT"),
+        titleLinks = Seq(
+          VersionMenu.create(unversionedLabel = "Getting Started"),
+          LinkGroup.create(
+            IconLink.external(config.repo.url, HeliumIcon.github),
+            IconLink.external(config.discord.url, HeliumIcon.chat) // ,
+            // IconLink.external("https://twitter.com/abcdefg/", HeliumIcon.twitter)
+          )
+        ),
+        linkPanel = Some(
+          LinkPanel(
+            "Documentation",
+            TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
+            TextLink.internal(Root / "examples" / "README.md", "Examples")
+          )
+        ),
+        // projectLinks = Seq(
+        //   TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
+        //   TextLink.internal(Root / "examples" / "README.md", "Examples")
+        //   // ButtonLink.external("http://somewhere.com/", "Button Label"),
+        //   // LinkGroup.create(
+        //   //   IconLink.internal(Root / "doc-2.md", HeliumIcon.demo),
+        //   //   IconLink.internal(Root / "doc-3.md", HeliumIcon.info)
+        //   // )
+        // ),
+        teasers = Seq(
+          Teaser("Teaser 1", "Description 1"),
+          Teaser("Teaser 2", "Description 2"),
+          Teaser("Teaser 3", "Description 3")
+        )
       )
       .build
