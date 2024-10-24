@@ -5,7 +5,12 @@ import scala.annotation.tailrec
 
 object DocGenerator:
 
-  def generateDocs(wd: os.Path, generatedDocsOut: os.Path, projects: ProjectTree): Unit =
+  def generateDocs(
+      wd: os.Path,
+      generatedDocsOut: os.Path,
+      projects: ProjectTree,
+      config: PurpleDocConfig
+  ): Unit =
     println("Generating docs.")
 
     if !os.exists(generatedDocsOut) then os.makeDir.all(generatedDocsOut)
@@ -24,9 +29,17 @@ object DocGenerator:
 
         val scalaFiles = os.walk(wd / project.srcPath).filter(_.ext == "scala")
 
+        val linksBlock =
+          s"""
+          |## Example Links
+          |
+          |  - [Edit this page](${config.repo.editBaseUrl + "/" + project.editHref})
+          |  - [Live demo](${config.website.baseUrl + "/demos/" + project.liveDemoHref})
+          |""".stripMargin
+
         val comments = scalaFiles.flatMap(extractComments)
 
-        val contents = pageHeader + comments.mkString("\n\n")
+        val contents = pageHeader + linksBlock + comments.mkString("\n\n")
 
         os.makeDir.all(generatedDocsOut / project.srcPath)
         os.write.over(generatedDocsOut / project.srcPath / "README.md", contents)

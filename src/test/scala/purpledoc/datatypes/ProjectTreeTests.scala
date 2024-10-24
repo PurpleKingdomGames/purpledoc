@@ -112,3 +112,27 @@ class ProjectTreeTests extends munit.FunSuite:
 
     assertEquals(actual, expected)
   }
+
+  test("toMetadata") {
+    val path = List("a", "b", "c")
+
+    val actual =
+      ProjectTree.pathToProjectTree(path).toList match
+        case l :: _ =>
+          l.toMetadata
+
+        case Nil =>
+          fail("Expected a leaf, but was empty")
+
+    val expected =
+      ProjectMetadata(
+        "c",
+        List("a", "b", "c"),
+        "a.b.c",
+        os.RelPath("a/b/c"),
+        "a/b/c/",
+        "a/b/c"
+      )
+
+    assertEquals(actual, expected)
+  }

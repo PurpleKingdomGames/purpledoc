@@ -52,7 +52,8 @@ final case class Logo(
 
 final case class RepoConfig(
     name: String,
-    url: String
+    url: String,
+    editBaseUrl: String,
 ) derives YamlCodec
 
 final case class DiscordConfig(

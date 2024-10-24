@@ -75,7 +75,7 @@ object Main:
 
     LiveDemoSiteGenerator.makeDemoSite(wd, paths.liveDemos, projectTree, !noLink)
 
-    DocGenerator.generateDocs(wd, paths.generatedDocs, projectTree)
+    DocGenerator.generateDocs(wd, paths.generatedDocs, projectTree, config)
 
     compileSources(paths.staticSite, paths)
 

@@ -55,7 +55,9 @@ object ProjectTree:
         leaf.name,
         leaf.path,
         leaf.path.mkString("."),
-        os.RelPath(leaf.path.mkString("/"))
+        os.RelPath(leaf.path.mkString("/")),
+        leaf.path.mkString("", "/", "/"),
+        leaf.path.mkString("/")
       )
 
   def pathToProjectTree(path: List[String]): ProjectTree =
