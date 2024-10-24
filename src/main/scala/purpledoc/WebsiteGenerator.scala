@@ -119,7 +119,15 @@ object WebsiteGenerator:
         )
       )
       .site
-      .internalCSS(Root / "css" / "custom.css")
+      .internalCSS(
+        Root / "css" / "custom.css",
+        condition = _.path != Root / "README.md"
+      )
+      .site
+      .internalCSS(
+        Root / "css" / "landing.css",
+        condition = _.path == Root / "README.md"
+      )
       .site
       .favIcons(
         Favicon.internal(Root / "img" / "favicon.png", sizes = "32x32")
@@ -159,7 +167,7 @@ object WebsiteGenerator:
             TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
             TextLink.internal(Root / "examples" / "README.md", "Examples")
           )
-        ),
+        )
         // projectLinks = Seq(
         //   TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
         //   TextLink.internal(Root / "examples" / "README.md", "Examples")
@@ -169,10 +177,10 @@ object WebsiteGenerator:
         //   //   IconLink.internal(Root / "doc-3.md", HeliumIcon.info)
         //   // )
         // ),
-        teasers = Seq(
-          Teaser("Teaser 1", "Description 1"),
-          Teaser("Teaser 2", "Description 2"),
-          Teaser("Teaser 3", "Description 3")
-        )
+        // teasers = Seq(
+        //   Teaser("Teaser 1", "Description 1"),
+        //   Teaser("Teaser 2", "Description 2"),
+        //   Teaser("Teaser 3", "Description 3")
+        // )
       )
       .build
