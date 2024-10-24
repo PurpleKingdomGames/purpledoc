@@ -21,13 +21,6 @@ Self links:
   - Edit this page.
   - Anything else?
 
-More purpledoc config for site params:
-  - Title
-  - Description
-  - Author
-  - Version
-  - etc.
-
  */
 
 object Main:
@@ -86,7 +79,7 @@ object Main:
 
     compileSources(paths.staticSite, paths)
 
-    WebsiteGenerator.build(paths.compiledSources, paths.destination)
+    WebsiteGenerator.build(paths.compiledSources, paths.destination, config)
 
     println("Done")
 

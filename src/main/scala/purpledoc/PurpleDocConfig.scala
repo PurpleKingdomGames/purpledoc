@@ -19,8 +19,36 @@ object PurpleDocConfig:
       println(s"No '$configFileName' config file found in: ${wd.toString}")
       sys.exit(1)
 
-final case class PurpleDocConfig(inputs: Inputs, outputs: Outputs) derives YamlCodec
+final case class PurpleDocConfig(
+    inputs: Inputs,
+    outputs: Outputs,
+    website: WebSiteConfig,
+    repo: RepoConfig,
+    discord: DiscordConfig
+) derives YamlCodec
 
 final case class Inputs(staticSite: String) derives YamlCodec
 
 final case class Outputs(destination: String) derives YamlCodec
+
+final case class WebSiteConfig(
+    title: String,
+    description: String,
+    logo: TopNavLogo
+) derives YamlCodec
+
+final case class TopNavLogo(
+    image: String,
+    width: Double,
+    height: Double
+) derives YamlCodec
+
+final case class RepoConfig(
+    name: String,
+    url: String
+) derives YamlCodec
+
+final case class DiscordConfig(
+    name: String,
+    url: String
+) derives YamlCodec

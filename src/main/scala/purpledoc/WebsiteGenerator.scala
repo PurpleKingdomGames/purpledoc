@@ -23,12 +23,15 @@ import scala.concurrent.duration._
 
 import cats.effect.unsafe.implicits.global
 import scala.concurrent.ExecutionContext.Implicits.global
+import laika.io.api.TreeTransformer
+import cats.effect.kernel.Resource
+import laika.theme.ThemeProvider
 
 object WebsiteGenerator:
 
-  def build(staticSite: os.Path, destination: os.Path): Unit =
+  def build(staticSite: os.Path, destination: os.Path, config: PurpleDocConfig): Unit =
     val res =
-      transformer
+      transformer(config)
         .use {
           _.fromDirectory(staticSite.toString)
             .toDirectory(destination.toString)
@@ -40,20 +43,20 @@ object WebsiteGenerator:
       1.minute
     )
 
-  def transformer =
+  def transformer(config: PurpleDocConfig): Resource[IO, TreeTransformer[IO]] =
     Transformer
       .from(Markdown)
       .to(HTML)
       .using(Markdown.GitHubFlavor)
       .parallel[IO]
-      .withTheme(theme)
+      .withTheme(theme(config))
       .build
 
-  def theme =
+  def theme(config: PurpleDocConfig): ThemeProvider =
     Helium.defaults.all
       .metadata(
-        title = Some("Purple Kingdom Games"),
-        description = Some("???"),
+        title = Some(config.website.title),
+        description = Some(config.website.description),
         identifier = Some(""),
         authors = Seq(),
         language = Some("en"),
@@ -103,20 +106,16 @@ object WebsiteGenerator:
         homeLink = ImageLink.internal(
           Root / "README.md",
           Image.internal(
-            Root / "img" / "tyrian-horizontal.svg",
-            alt = Some("Tyrian, an Elm inspired frontend framework for Scala.js."),
-            title = Some("Tyrian"),
+            Root / "img" / config.website.logo.image,
+            alt = Some(config.website.description),
+            title = Some(config.website.title),
             width = Some(Length(150.0, LengthUnit.px)),
             height = Some(Length(50.0, LengthUnit.px))
           )
         ),
         navLinks = Seq(
-          ButtonLink.external("https://discord.gg/b5CD47g", "Discord"),
-          ButtonLink.external("/api", "API"),
-          ButtonLink.external(
-            "https://github.com/PurpleKingdomGames/tyrian",
-            "Github"
-          )
+          ButtonLink.external(config.discord.url, config.discord.name),
+          ButtonLink.external(config.repo.url, config.repo.name)
         )
       )
       .site
