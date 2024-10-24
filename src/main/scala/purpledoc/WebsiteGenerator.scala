@@ -104,7 +104,7 @@ object WebsiteGenerator:
       .site
       .topNavigationBar(
         homeLink = ImageLink.internal(
-          Root / "README.md",
+          Root / "documentation" / "README.md",
           Image.internal(
             Root / "img" / config.website.logo.image,
             alt = Some(config.website.description),
