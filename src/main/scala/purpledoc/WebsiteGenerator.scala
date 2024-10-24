@@ -149,8 +149,7 @@ object WebsiteGenerator:
         title = Some(config.website.title),
         subtitle = Some(config.website.description),
         latestReleases = Seq(
-          ReleaseInfo("Latest Stable Release", "2.3.5"),
-          ReleaseInfo("Latest Milestone Release", "2.4.0-M2")
+          ReleaseInfo("Latest Release", config.website.latestRelease)
         ),
         license = Some("MIT"),
         titleLinks = Seq(
@@ -163,7 +162,7 @@ object WebsiteGenerator:
         ),
         linkPanel = Some(
           LinkPanel(
-            "Documentation",
+            "User Guide",
             TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
             TextLink.internal(Root / "examples" / "README.md", "Examples")
           )
