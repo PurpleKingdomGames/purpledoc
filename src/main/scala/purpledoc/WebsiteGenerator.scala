@@ -103,16 +103,22 @@ object WebsiteGenerator:
       )
       .site
       .topNavigationBar(
-        homeLink = ImageLink.internal(
-          Root / "documentation" / "README.md",
-          Image.internal(
-            Root / "img" / config.website.topNavLogo.image,
-            alt = Some(config.website.description),
-            title = Some(config.website.title),
-            width = Some(Length(config.website.topNavLogo.width, LengthUnit.px)),
-            height = Some(Length(config.website.topNavLogo.height, LengthUnit.px))
-          )
-        ),
+        homeLink = config.website.topNavLogo match {
+          case Some(topNavLogo) =>
+            ImageLink.internal(
+              Root / "documentation" / "README.md",
+              Image.internal(
+                Root / "img" / topNavLogo.image,
+                alt = Some(config.website.description),
+                title = Some(config.website.title),
+                width = Some(Length(topNavLogo.width, LengthUnit.px)),
+                height = Some(Length(topNavLogo.height, LengthUnit.px))
+              )
+            )
+
+          case None =>
+            IconLink.internal(Root / "documentation" / "README.md", HeliumIcon.home)
+        },
         navLinks = Seq(
           ButtonLink.external(config.website.baseUrl + "demos", "Live Demos"),
           ButtonLink.external(config.discord.url, config.discord.name),
@@ -140,13 +146,13 @@ object WebsiteGenerator:
       )
       .site
       .landingPage(
-        logo = Some(
+        logo = config.website.logo.map { logo =>
           Image.internal(
-            Root / "img" / config.website.logo.image,
+            Root / "img" / logo.image,
             alt = Some(config.website.description),
             title = Some(config.website.title)
           )
-        ),
+        },
         title = Some(config.website.title),
         subtitle = Some(config.website.description),
         latestReleases = Seq(
