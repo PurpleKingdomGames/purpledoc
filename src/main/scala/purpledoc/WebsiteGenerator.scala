@@ -166,7 +166,7 @@ object WebsiteGenerator:
             "User Guide",
             TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
             TextLink.internal(Root / "examples" / "README.md", "Examples"),
-            TextLink.external(config.website.baseUrl + "demos", "Live Demos")
+            TextLink.external(config.website.baseUrl + "/" + "demos", "Live Demos")
           )
         )
         // projectLinks = Seq(
