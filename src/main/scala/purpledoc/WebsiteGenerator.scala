@@ -114,6 +114,7 @@ object WebsiteGenerator:
           )
         ),
         navLinks = Seq(
+          ButtonLink.external(config.website.baseUrl + "demos", "Live Demos"),
           ButtonLink.external(config.discord.url, config.discord.name),
           ButtonLink.external(config.repo.url, config.repo.name)
         )
@@ -157,14 +158,15 @@ object WebsiteGenerator:
           LinkGroup.create(
             IconLink.external(config.repo.url, HeliumIcon.github),
             IconLink.external(config.discord.url, HeliumIcon.chat) // ,
-            // IconLink.external("https://twitter.com/abcdefg/", HeliumIcon.twitter)
+            // IconLink.external("https://twitter.com/indigoengine/", HeliumIcon.twitter)
           )
         ),
         linkPanel = Some(
           LinkPanel(
             "User Guide",
             TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
-            TextLink.internal(Root / "examples" / "README.md", "Examples")
+            TextLink.internal(Root / "examples" / "README.md", "Examples"),
+            TextLink.external(config.website.baseUrl + "demos", "Live Demos")
           )
         )
         // projectLinks = Seq(

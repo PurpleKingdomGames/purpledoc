@@ -36,7 +36,8 @@ final case class WebSiteConfig(
     description: String,
     topNavLogo: TopNavLogo,
     logo: Logo,
-    latestRelease: String
+    latestRelease: String,
+    baseUrl: String
 ) derives YamlCodec
 
 final case class TopNavLogo(
