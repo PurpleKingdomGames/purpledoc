@@ -35,6 +35,7 @@ object DocGenerator:
           |
           |  - [Edit this page](${config.repo.editBaseUrl + "/" + project.editHref})
           |  - [Live demo](${config.website.baseUrl + "/demos/" + project.liveDemoHref})
+          |
           |""".stripMargin
 
         val comments = scalaFiles.flatMap(extractComments)
