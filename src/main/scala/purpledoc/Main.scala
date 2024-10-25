@@ -16,8 +16,6 @@ Variables
   - etc.
 - A way to use them in the contents of the site
 
-Support for Tyrian
-
  */
 
 object Main:
@@ -70,7 +68,7 @@ object Main:
         case head :: tail =>
           ProjectTree.Branch("root", tail)
 
-    LiveDemoSiteGenerator.makeDemoSite(wd, paths.liveDemos, projectTree, !noLink)
+    LiveDemoSiteGenerator.makeDemoSite(wd, paths.liveDemos, projectTree, !noLink, config.projectKind)
 
     DocGenerator.generateDocs(wd, paths.generatedDocs, projectTree, config)
 

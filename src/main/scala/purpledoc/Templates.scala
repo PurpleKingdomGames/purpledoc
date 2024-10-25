@@ -8,7 +8,6 @@ object Templates:
   def cleanUpName(name: String): String =
     name.replace("-", " ").capitalize
 
-
 object HomePage {
 
   def page(projectTree: ProjectTree) =
@@ -75,6 +74,35 @@ object IndigoIndex {
             """IndigoGame.launch('indigo-container')"""
           ),
           p("Hit 'f' for fullscreen.")
+        )
+      )
+
+}
+
+object TyrianTemplates {
+
+  // tyrianapp.js
+  def appJS: String =
+    """
+    |import { TyrianApp } from "./main.js";
+    |
+    |TyrianApp.launch("myapp");
+    |""".stripMargin
+
+  // index.html
+  def index(pageName: String) =
+    "<!DOCTYPE html>" +
+      html(
+        head(title := pageName)(
+          meta(charset := "UTF-8"),
+          link(
+            rel  := "stylesheet",
+            href := "https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+          )
+        ),
+        body(
+          div(id := "myapp")(),
+          script(tpe := "module", src := "./tyrianapp.js")()
         )
       )
 

@@ -20,12 +20,21 @@ object PurpleDocConfig:
       sys.exit(1)
 
 final case class PurpleDocConfig(
+    kind: String,
     inputs: Inputs,
     outputs: Outputs,
     website: WebSiteConfig,
     repo: RepoConfig,
     discord: DiscordConfig
-) derives YamlCodec
+) derives YamlCodec:
+  def projectKind: ProjectKind = kind match
+    case "indigo" => ProjectKind.Indigo
+    case "tyrian" => ProjectKind.Tyrian
+    case _        => sys.error(s"Unknown project kind: $kind")
+
+enum ProjectKind derives YamlCodec:
+  case Indigo
+  case Tyrian
 
 final case class Inputs(staticSite: String) derives YamlCodec
 
@@ -53,7 +62,7 @@ final case class Logo(
 final case class RepoConfig(
     name: String,
     url: String,
-    editBaseUrl: String,
+    editBaseUrl: String
 ) derives YamlCodec
 
 final case class DiscordConfig(
