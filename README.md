@@ -28,7 +28,7 @@ The repo you plan to document needs two things:
 
 Start by checking out this repo, and then use one of the following methods.
 
-### Method 1: It's just Scala-CLI afterall
+### Method 1: It's just Scala-CLI, after all
 
 In your terminal, navigate to the repo root, and run as follows:
 
