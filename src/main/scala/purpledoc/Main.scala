@@ -124,13 +124,17 @@ object Main:
   }
 
   def cleanUp(paths: Paths): Unit =
-    if os.exists(paths.target) then
-      os.remove.all(paths.target)
-      os.makeDir.all(paths.target)
+    if !os.exists(paths.target) then os.makeDir.all(paths.target)
+    else
+      os.list(paths.target).foreach { p =>
+        os.remove.all(p)
+      }
 
-    if os.exists(paths.destination) then
-      os.remove.all(paths.destination)
-      os.makeDir.all(paths.destination)
+    if !os.exists(paths.destination) then os.makeDir.all(paths.destination)
+    else
+      os.list(paths.destination).foreach { p =>
+        os.remove.all(p)
+      }
 
 final case class Paths(wd: os.Path, config: PurpleDocConfig):
 
