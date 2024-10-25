@@ -16,10 +16,7 @@ Variables
   - etc.
 - A way to use them in the contents of the site
 
-Self links:
-  - Link to this example
-  - Edit this page.
-  - Anything else?
+Support for Tyrian
 
  */
 
