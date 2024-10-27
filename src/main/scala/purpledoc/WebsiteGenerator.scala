@@ -47,7 +47,7 @@ object WebsiteGenerator:
     Transformer
       .from(Markdown)
       .to(HTML)
-      .using(Markdown.GitHubFlavor)
+      .using(Markdown.GitHubFlavor, SyntaxHighlighting)
       .parallel[IO]
       .withTheme(theme(config))
       .build
