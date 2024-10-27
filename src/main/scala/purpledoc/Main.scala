@@ -7,6 +7,8 @@ import mainargs.{main, arg, ParserForMethods, Flag}
 /*
 TODO:
 
+BUG: Gtabbing multiline comments is fine, but when grabbing code snippets we shouldn't trim the lines beyond the indent of the initial line.
+
 Variables
 - Including
   - Scala version
@@ -68,7 +70,13 @@ object Main:
         case head :: tail =>
           ProjectTree.Branch("root", tail)
 
-    LiveDemoSiteGenerator.makeDemoSite(wd, paths.liveDemos, projectTree, !noLink, config.projectKind)
+    LiveDemoSiteGenerator.makeDemoSite(
+      wd,
+      paths.liveDemos,
+      projectTree,
+      !noLink,
+      config.projectKind
+    )
 
     DocGenerator.generateDocs(wd, paths.generatedDocs, projectTree, config)
 
