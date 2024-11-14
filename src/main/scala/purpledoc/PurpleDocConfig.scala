@@ -25,6 +25,7 @@ final case class PurpleDocConfig(
     outputs: Outputs,
     website: WebSiteConfig,
     repo: RepoConfig,
+    docsRepo: RepoConfig,
     discord: DiscordConfig
 ) derives YamlCodec:
   def projectKind: ProjectKind = kind match
