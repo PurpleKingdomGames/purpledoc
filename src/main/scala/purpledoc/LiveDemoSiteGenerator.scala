@@ -23,7 +23,7 @@ object LiveDemoSiteGenerator:
           case ProjectKind.Tyrian =>
             os.proc("./mill", s"${pjt.millPath}.fullLinkJS").call(cwd = wd)
           case ProjectKind.Indigo =>
-            os.proc("./mill", s"${pjt.millPath}.buildGameFull").call(cwd = wd)
+            os.proc("./mill", s"${pjt.millPath}.indigoBuildFull").call(cwd = wd)
       }
     else println("Skipping project builds.")
 
