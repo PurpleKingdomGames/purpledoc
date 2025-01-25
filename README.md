@@ -51,3 +51,13 @@ Now you can run `purpledoc --input . --nolink` or `purpledoc -i .` from any dire
 ### Method 3: Native app
 
 Refer to the scala-cli docs to make a native graavl image and alias it as above. Technically produces faster start times, but method 2 is not slow.
+
+## Partial builds
+
+Once you start to build up a lot of examples in your project, waiting for a full rebuild can take quite a while and be rather boring. To speed things up, you can perform a partial build of just the examples you care about at the moment using the `--partial` or `-p` flag, as follows:
+
+```
+purpledoc -i . -p colour,noise
+```
+
+The example above will build any example project / module with the word `colour` or `noise` in its path.
