@@ -1,8 +1,8 @@
 package purpledoc
 
 object MillProjectLister {
-  
-  def buildProjectList(wd: os.Path): List[String] =
+
+  def buildProjectList(wd: os.Path, projectFilter: List[String]): List[String] =
     // Extract all sub-projects
     val findProjects = os
       .proc(
@@ -27,9 +27,13 @@ object MillProjectLister {
       )
       .spawn(cwd = wd, stdin = filterOutTestProjects.stdout)
 
-    LazyList
-      .continually(cleanUpNames.stdout.readLine())
-      .takeWhile(_ != null)
-      .toList
+    val theList =
+      LazyList
+        .continually(cleanUpNames.stdout.readLine())
+        .takeWhile(_ != null)
+        .toList
+
+    if projectFilter.isEmpty then theList
+    else theList.filter(p => projectFilter.exists(pf => p.contains(pf)))
 
 }

@@ -33,13 +33,26 @@ object Main:
         doc =
           "Boolean flag to specify whether or not to link all Scala.js projects, default is true"
       )
-      nolink: Flag
+      nolink: Flag,
+      @arg(
+        short = 'p',
+        doc = "Partial build. A comma separated list of project names to build."
+      )
+      partial: Option[String]
   ) =
-    go(input, nolink.value)
+    go(input, nolink.value, partial)
 
   def main(args: Array[String]): Unit = ParserForMethods(this).runOrExit(args.toIndexedSeq)
 
-  def go(input: Option[String], noLink: Boolean): Unit =
+  def go(input: Option[String], noLink: Boolean, partial: Option[String]): Unit =
+    val projectFilter: List[String] =
+      partial match
+        case None =>
+          Nil
+
+        case Some(p) =>
+          p.split(",").toList.map(_.trim)
+
     val wd =
       input match
         case None =>
@@ -56,7 +69,7 @@ object Main:
 
     if !os.exists(paths.target) then os.makeDir.all(paths.target)
 
-    val projectList = MillProjectLister.buildProjectList(wd)
+    val projectList = MillProjectLister.buildProjectList(wd, projectFilter)
     val trees =
       ProjectTree.combineTrees(projectList.map(ProjectTree.stringToProjectTree))
     val projectTree =
