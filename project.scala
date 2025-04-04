@@ -1,4 +1,4 @@
-//> using scala "3.5.0"
+//> using scala "3.6.4"
 
 //> using dep com.lihaoyi::os-lib:0.11.3
 //> using dep com.lihaoyi::scalatags:0.13.1
