@@ -72,8 +72,7 @@ object IndigoIndex {
           script(tpe := "text/javascript", src := "scripts/main.js")(),
           script(tpe := "text/javascript")(
             """IndigoGame.launch('indigo-container')"""
-          ),
-          p("Hit 'f' for fullscreen.")
+          )
         )
       )
 
