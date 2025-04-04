@@ -4,22 +4,6 @@ import purpledoc.datatypes.ProjectTree
 
 import mainargs.{main, arg, ParserForMethods, Flag}
 
-/*
-TODO:
-
-BUG: Gtabbing multiline comments is fine, but when grabbing code snippets we shouldn't trim the lines beyond the indent of the initial line.
-
-Variables
-- Including
-  - Scala version
-  - Scala.js version
-  - Indigo version
-  - Ultraviolet version
-  - etc.
-- A way to use them in the contents of the site
-
- */
-
 object Main:
 
   @main
@@ -84,6 +68,7 @@ object Main:
           ProjectTree.Branch("root", tail)
 
     LiveDemoSiteGenerator.makeDemoSite(
+      config.website.title,
       wd,
       paths.liveDemos,
       projectTree,

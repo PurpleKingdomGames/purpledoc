@@ -6,6 +6,7 @@ object LiveDemoSiteGenerator:
 
   // LinkAll is a flag to build all the shaders before generating the site
   def makeDemoSite(
+      projectName: String,
       wd: os.Path,
       liveDemos: os.Path,
       projects: ProjectTree,
@@ -75,5 +76,5 @@ object LiveDemoSiteGenerator:
     // Build an index page with links to all the sub folders
     os.write(
       liveDemos / "index.html",
-      HomePage.page(projects)
+      HomePage.page(projectName, projects)
     )

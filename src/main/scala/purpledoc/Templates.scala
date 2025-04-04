@@ -10,10 +10,10 @@ object Templates:
 
 object HomePage {
 
-  def page(projectTree: ProjectTree) =
+  def page(projectName: String, projectTree: ProjectTree) =
     "<!DOCTYPE html>" +
       html(
-        head(title := "Ultraviolet Examples")(
+        head(title := s"$projectName Examples")(
           meta(charset := "UTF-8"),
           link(
             rel  := "stylesheet",
@@ -21,7 +21,7 @@ object HomePage {
           )
         ),
         body(
-          h1("Ultraviolet Examples"),
+          h1(s"$projectName Examples"),
           p(
             "Click on any of the links below."
           ),
