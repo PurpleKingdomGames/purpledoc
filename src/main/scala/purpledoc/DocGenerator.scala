@@ -33,7 +33,7 @@ object DocGenerator:
           s"""
           |## Example Links
           |
-          |  - [Edit this page](${config.docsRepo.editBaseUrl + "/" + project.editHref})
+          |  - [View example code](${config.docsRepo.editBaseUrl + "/" + project.editHref})
           |  - [Live demo](${config.website.baseUrl + "/demos/" + project.liveDemoHref})
           |
           |""".stripMargin
