@@ -171,23 +171,8 @@ object WebsiteGenerator:
           LinkPanel(
             "User Guide",
             TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
-            TextLink.internal(Root / "examples" / "README.md", "Examples"),
             TextLink.external(config.website.baseUrl + "/" + "demos", "Live Demos")
           )
         )
-        // projectLinks = Seq(
-        //   TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
-        //   TextLink.internal(Root / "examples" / "README.md", "Examples")
-        //   // ButtonLink.external("http://somewhere.com/", "Button Label"),
-        //   // LinkGroup.create(
-        //   //   IconLink.internal(Root / "doc-2.md", HeliumIcon.demo),
-        //   //   IconLink.internal(Root / "doc-3.md", HeliumIcon.info)
-        //   // )
-        // ),
-        // teasers = Seq(
-        //   Teaser("Teaser 1", "Description 1"),
-        //   Teaser("Teaser 2", "Description 2"),
-        //   Teaser("Teaser 3", "Description 3")
-        // )
       )
       .build

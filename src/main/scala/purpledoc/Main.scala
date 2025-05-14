@@ -54,8 +54,10 @@ object Main:
     if !os.exists(paths.target) then os.makeDir.all(paths.target)
 
     val projectList = MillProjectLister.buildProjectList(wd, projectFilter)
+
     val trees =
       ProjectTree.combineTrees(projectList.map(ProjectTree.stringToProjectTree))
+
     val projectTree =
       trees match
         case Nil =>
@@ -65,7 +67,7 @@ object Main:
           head
 
         case head :: tail =>
-          ProjectTree.Branch("root", tail)
+          ProjectTree.Branch("root", head :: tail)
 
     LiveDemoSiteGenerator.makeDemoSite(
       config.website.title,
@@ -78,13 +80,13 @@ object Main:
 
     DocGenerator.generateDocs(wd, paths.generatedDocs, projectTree, config)
 
-    compileSources(paths.staticSite, paths)
+    compileSources(paths.staticSite, paths, config.website.navigationOrder)
 
     WebsiteGenerator.build(paths.compiledSources, paths.destination, config)
 
     println("Done")
 
-  def compileSources(staticSite: os.Path, paths: Paths): Unit = {
+  def compileSources(staticSite: os.Path, paths: Paths, navigationOrder: List[String]): Unit = {
     if !os.exists(paths.compiledSources) then os.makeDir.all(paths.compiledSources)
 
     // Copy the static site to the compiled sources directory
@@ -122,6 +124,15 @@ object Main:
         mergeFolders = true
       )
     }
+
+    val directoryConf =
+      s"""
+      |laika.navigationOrder = [
+      |${navigationOrder.mkString("  ", "\n  ", "")}
+      |]
+      |""".stripMargin
+
+    os.write.over(paths.compiledSources / "directory.conf", directoryConf)
   }
 
   def cleanUp(paths: Paths): Unit =
