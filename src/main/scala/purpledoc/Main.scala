@@ -116,7 +116,7 @@ object Main:
     os.list(paths.liveDemos).foreach { p =>
       os.copy.into(
         from = p,
-        to = paths.compiledSources / "_live_demos",
+        to = paths.compiledSources / "live_demos",
         followLinks = true,
         replaceExisting = true,
         copyAttributes = false,
