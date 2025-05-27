@@ -6,4 +6,4 @@
 //> using dep org.virtuslab::scala-yaml:0.3.0
 //> using dep org.typelevel::laika-io:1.3.2
 
-//> using test.dep org.scalameta::munit::1.0.2
+//> using test.dep org.scalameta::munit::1.1.1
