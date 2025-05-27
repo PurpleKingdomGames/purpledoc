@@ -35,7 +35,7 @@ object HomePage {
 
   def projectTreeToHtml(projectTree: ProjectTree): Frag =
     projectTree match {
-      case ProjectTree.Branch(name, children) =>
+      case ProjectTree.Branch(name, _, children) =>
         li(Templates.cleanUpName(name))(
           ul()(
             children.map(projectTreeToHtml)

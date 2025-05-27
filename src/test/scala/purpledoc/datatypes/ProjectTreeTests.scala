@@ -11,9 +11,11 @@ class ProjectTreeTests extends munit.FunSuite:
     val expected =
       ProjectTree.Branch(
         "a",
+        List("a"),
         List(
           ProjectTree.Branch(
             "b",
+            List("a", "b"),
             List(
               ProjectTree.Leaf("c", List("a", "b", "c"))
             )
@@ -45,12 +47,15 @@ class ProjectTreeTests extends munit.FunSuite:
       List(
         ProjectTree.Branch(
           "a",
+          List("a"),
           List(
             ProjectTree.Branch(
               "b",
+              List("a", "b"),
               List(
                 ProjectTree.Branch(
                   "c",
+                  List("a", "b", "c"),
                   List(
                     ProjectTree.Leaf("d", pathA),
                     ProjectTree.Leaf("e", pathB)
@@ -58,6 +63,7 @@ class ProjectTreeTests extends munit.FunSuite:
                 ),
                 ProjectTree.Branch(
                   "f",
+                  List("a", "b", "f"),
                   List(
                     ProjectTree.Leaf("g", pathC)
                   )
@@ -88,15 +94,18 @@ class ProjectTreeTests extends munit.FunSuite:
       List(
         ProjectTree.Branch(
           "fragment",
+          List("fragment"),
           List(
             ProjectTree.Branch(
               "sdf",
+              List("fragment", "sdf"),
               List(
                 ProjectTree.Leaf("circle", List("fragment", "sdf", "circle"))
               )
             ),
             ProjectTree.Branch(
               "shapes",
+              List("fragment", "shapes"),
               List(
                 ProjectTree
                   .Leaf("doughnut", List("fragment", "shapes", "doughnut")),
@@ -130,15 +139,18 @@ class ProjectTreeTests extends munit.FunSuite:
       List(
         ProjectTree.Branch(
           "fragment",
+          List("fragment"),
           List(
             ProjectTree.Branch(
               "sdf",
+              List("fragment", "sdf"),
               List(
                 ProjectTree.Leaf("circle", List("fragment", "sdf", "circle"))
               )
             ),
             ProjectTree.Branch(
               "shapes",
+              List("fragment", "shapes"),
               List(
                 ProjectTree
                   .Leaf("doughnut", List("fragment", "shapes", "doughnut")),

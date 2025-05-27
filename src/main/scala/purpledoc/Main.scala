@@ -67,7 +67,7 @@ object Main:
           head
 
         case head :: tail =>
-          ProjectTree.Branch("root", head :: tail)
+          ProjectTree.Branch("root", List("/"), head :: tail)
 
     val sortedProjectTree =
       projectTree.sorted
