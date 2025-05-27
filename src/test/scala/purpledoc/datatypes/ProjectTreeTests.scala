@@ -113,6 +113,48 @@ class ProjectTreeTests extends munit.FunSuite:
     assertEquals(actual, expected)
   }
 
+  test("sorting") {
+
+    val paths =
+      List(
+        // "shaders.fragment.basics.colours",
+        "fragment.sdf.circle",
+        "fragment.shapes.metaballs",
+        "fragment.shapes.doughnut"
+      ).map(ProjectTree.stringToProjectTree)
+
+    val actual =
+      ProjectTree.combineTrees(paths).map(_.sorted)
+
+    val expected =
+      List(
+        ProjectTree.Branch(
+          "fragment",
+          List(
+            ProjectTree.Branch(
+              "sdf",
+              List(
+                ProjectTree.Leaf("circle", List("fragment", "sdf", "circle"))
+              )
+            ),
+            ProjectTree.Branch(
+              "shapes",
+              List(
+                ProjectTree
+                  .Leaf("doughnut", List("fragment", "shapes", "doughnut")),
+                ProjectTree.Leaf(
+                  "metaballs",
+                  List("fragment", "shapes", "metaballs")
+                )
+              )
+            )
+          )
+        )
+      )
+
+    assertEquals(actual, expected)
+  }
+
   test("toMetadata") {
     val path = List("a", "b", "c")
 

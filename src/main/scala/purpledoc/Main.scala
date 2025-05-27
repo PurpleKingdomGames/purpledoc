@@ -69,11 +69,14 @@ object Main:
         case head :: tail =>
           ProjectTree.Branch("root", head :: tail)
 
+    val sortedProjectTree =
+      projectTree.sorted
+
     LiveDemoSiteGenerator.makeDemoSite(
       config.website.title,
       wd,
       paths.liveDemos,
-      projectTree,
+      sortedProjectTree,
       !noLink,
       config.projectKind
     )

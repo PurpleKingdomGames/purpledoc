@@ -7,6 +7,12 @@ enum ProjectTree:
   case Leaf(name: String, path: List[String])
   case Empty
 
+  def giveName: String =
+    this match
+      case Branch(name, _) => name
+      case Leaf(name, _)   => name
+      case Empty           => ""
+
   def prettyPrint(level: Int): String =
     this match
       case ProjectTree.Branch(name, children) =>
@@ -46,6 +52,16 @@ enum ProjectTree:
 
       case ProjectTree.Empty =>
         Nil
+
+  def sorted: ProjectTree =
+    this match
+      case b @ Branch(name, children) =>
+        b.copy(
+          children = children.sortBy(_.giveName).map(_.sorted)
+        )
+
+      case tree =>
+        tree
 
 object ProjectTree:
 
