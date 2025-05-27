@@ -68,6 +68,26 @@ object DocGenerator:
         if os.exists(p / ".gitkeep") then os.remove(p / ".gitkeep")
     }
 
+    os.walk(generatedDocsOut).foreach { p =>
+      if os.isDir(p) && !os.list(p).exists(p => p.baseName == "directory" && p.ext == "conf") then
+        val navigationOrder =
+          os.list(p)
+            .map(_.last)
+            .filterNot(_ == "README.md")
+            .toList
+            .sorted
+
+        if navigationOrder.nonEmpty then
+          val directoryConf =
+            s"""
+            |laika.navigationOrder = [
+            |${navigationOrder.mkString("  ", "\n  ", "")}
+            |]
+            |""".stripMargin
+
+          os.write.over(p / "directory.conf", directoryConf)
+    }
+
   def extractComments(lines: List[String]): List[String] =
     @tailrec
     def rec(
