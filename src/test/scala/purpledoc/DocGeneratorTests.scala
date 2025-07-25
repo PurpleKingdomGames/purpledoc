@@ -162,3 +162,42 @@ class DocGeneratorTests extends munit.FunSuite:
 
     assertEquals(actual, expected)
   }
+
+  test("code snippet with double indented code") {
+    val input =
+      """
+      |val y = 2
+      |/** Snippet example
+      |  */
+      |object Bar:
+      |  object Baz:
+      |    /** Testing
+      |    */
+      |    // ```scala
+      |    def foo: Unit =
+      |      val x = 1
+      |      ()
+      |    // ```
+      |
+      |""".stripMargin
+
+    val lines =
+      input.split("\n").toList
+
+    val actual = DocGenerator.extractComments(lines)
+
+    val expected =
+      List(
+        """Snippet example""",
+        """Testing""",
+        """
+        |```scala
+        |def foo: Unit =
+        |  val x = 1
+        |  ()
+        |```
+        |""".stripMargin.trim
+      )
+
+    assertEquals(actual, expected)
+  }
