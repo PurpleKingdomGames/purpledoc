@@ -8,20 +8,20 @@ The idea is to aim for maximum maintainability and correctness, following the ag
 
 > Working software over comprehensive documentation
 
-The documentation produced then, is split into three parts:
+The documentation produced, then, is split into three parts:
 
 1. Conceptual and unavoidably manual documentation, that covers long lived topics that remain largely true across many or all releases.
 2. Documentation generated from working examples.
-3. Live demos build from the working examples.
+3. Live demos built from the working examples.
 
 Point (2) was really the starting notion of the project. The idea is that rather than writing documentation and putting code in it that must be checked by tools like MDoc, we write real example projects that have documentation in them.
 
 ## Prerequisites
 
-The repo you plan to document needs two things:
+The repo you plan to document needs three things:
 
 1. It must be a Mill project.
-2. It must have a purpledoc.yaml file at it's root.
+2. It must have a purpledoc.yaml file at its root.
 3. It must contain Indigo (or soon Tyrian) projects, arranged in a tree.
 
 ## Running purpledoc
@@ -40,7 +40,7 @@ The `--nolink` parameter tells purpledoc that the project has been built, and no
 
 ### Method 2: CLI
 
-Add the following to you `.zshrc` file (assuming ZSH):
+Add the following to your `.zshrc` file (assuming ZSH):
 
 ```
 alias purpledoc="java -jar <path to repo>/purpledoc/purpledoc.jar"
@@ -50,7 +50,7 @@ Now you can run `purpledoc --input . --nolink` or `purpledoc -i .` from any dire
 
 ### Method 3: Native app
 
-Refer to the scala-cli docs to make a native graavl image and alias it as above. Technically produces faster start times, but method 2 is not slow.
+Refer to the scala-cli docs to make a native GraalVM image and alias it as above. Technically produces faster start times, but method 2 is not slow.
 
 ## Partial builds
 
