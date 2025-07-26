@@ -105,6 +105,25 @@ class DocGeneratorTests extends munit.FunSuite:
     assertEquals(actual, expected)
   }
 
+  test("scaladoc style comment on a single line") {
+    val input =
+      """
+      |/** Taking our 'pulse' boolean value, we can choose a range of 1 to 5, or 1 to 10. */
+      |""".stripMargin.trim
+
+    val lines =
+      input.split("\n").toList
+
+    val actual = DocGenerator.extractComments(lines)
+
+    val expected =
+      List(
+        """Taking our 'pulse' boolean value, we can choose a range of 1 to 5, or 1 to 10."""
+      )
+
+    assertEquals(actual, expected)
+  }
+
   test("code snippet no indent") {
     val input =
       """
@@ -198,6 +217,136 @@ class DocGeneratorTests extends munit.FunSuite:
         |```
         |""".stripMargin.trim
       )
+
+    assertEquals(actual, expected)
+  }
+
+  test("Can extract consecutive code snippets") {
+    val input =
+      """
+      |val y = 2
+      |/** First snippet example
+      |  */
+      |object Bar:
+      |  // ```scala
+      |  def firstMethod: Unit =
+      |    val x = 1
+      |    ()
+      |  // ```
+      |  // ```scala
+      |  def secondMethod: Unit =
+      |    val y = 2
+      |    ()
+      |  // ```
+      |
+      |""".stripMargin
+
+    val lines =
+      input.split("\n").toList
+
+    val actual = DocGenerator.extractComments(lines)
+
+    val expected =
+      List(
+        """First snippet example""",
+        """
+        |```scala
+        |def firstMethod: Unit =
+        |  val x = 1
+        |  ()
+        |```
+        |""".stripMargin.trim,
+        """
+        |```scala
+        |def secondMethod: Unit =
+        |  val y = 2
+        |  ()
+        |```
+        |""".stripMargin.trim
+      )
+
+    assertEquals(actual, expected)
+  }
+
+  test("Can extract text following a code snippet") {
+    val input =
+      """
+      |val y = 2
+      |/** Code snippet example
+      |  */
+      |object Bar:
+      |  // ```scala
+      |  def someMethod: Unit =
+      |    val x = 1
+      |    ()
+      |  // ```
+      |  /** This is explanatory text after the code snippet
+      |    */
+      |  val someValue = 42
+      |
+      |""".stripMargin
+
+    val lines =
+      input.split("\n").toList
+
+    val actual = DocGenerator.extractComments(lines)
+
+    val expected =
+      List(
+        """Code snippet example""",
+        """
+        |```scala
+        |def someMethod: Unit =
+        |  val x = 1
+        |  ()
+        |```
+        """.stripMargin.trim,
+        "This is explanatory text after the code snippet"
+      )
+
+    assertEquals(actual, expected)
+  }
+
+  test("compileMarkdown builds a complete markdown page from components") {
+    val pageHeader = "# My Example Project\n\nThis is an example project.\n\n"
+
+    val linksBlock =
+      """## Example Links
+      |
+      |  - [View example code](https://github.com/example/repo/edit/main/src/example)
+      |  - [Live demo](https://example.com/live_demos/example)
+      |
+      |""".stripMargin
+
+    val comments = List(
+      "This is a comment explaining the code",
+      """```scala
+      |def hello: Unit =
+      |  println("Hello, World!")
+      |```""".stripMargin,
+      "This explains what happens after the code"
+    )
+
+    val actual = DocGenerator.compileMarkdown(pageHeader, linksBlock, comments)
+
+    val expected =
+      """# My Example Project
+      |
+      |This is an example project.
+      |
+      |## Example Links
+      |
+      |  - [View example code](https://github.com/example/repo/edit/main/src/example)
+      |  - [Live demo](https://example.com/live_demos/example)
+      |
+      |This is a comment explaining the code
+      |
+      |```scala
+      |def hello: Unit =
+      |  println("Hello, World!")
+      |```
+      |
+      |This explains what happens after the code""".stripMargin
 
     assertEquals(actual, expected)
   }

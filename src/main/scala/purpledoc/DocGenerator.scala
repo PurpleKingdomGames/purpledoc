@@ -40,7 +40,7 @@ object DocGenerator:
 
         val comments = scalaFiles.flatMap(file => extractComments(os.read.lines(file).toList))
 
-        val contents = pageHeader + linksBlock + comments.mkString("\n\n")
+        val contents = compileMarkdown(pageHeader, linksBlock, comments.toList)
 
         os.makeDir.all(generatedDocsOut / project.srcPath)
         os.write.over(generatedDocsOut / project.srcPath / "README.md", contents)
@@ -88,6 +88,9 @@ object DocGenerator:
           os.write.over(p / "directory.conf", directoryConf)
     }
 
+  def compileMarkdown(pageHeader: String, linksBlock: String, comments: List[String]): String =
+    pageHeader + linksBlock + comments.mkString("\n\n")
+
   def extractComments(lines: List[String]): List[String] =
     @tailrec
     def rec(
@@ -99,6 +102,13 @@ object DocGenerator:
       remaining match
         case Nil =>
           acc
+
+        // Multi-line scaladoc comment on one line
+        case l :: ls if l.contains("/**") && l.contains("*/") =>
+          val after   = l.splitAt(l.indexOf("/**") + 3)._2
+          val comment = after.splitAt(after.indexOf("*/"))._1.trim
+
+          rec(ls, Nil, Nil, acc :+ comment)
 
         // Multi-line comment on one line
         case l :: ls if l.contains("/*") && l.contains("*/") =>
