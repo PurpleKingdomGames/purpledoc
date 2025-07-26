@@ -152,7 +152,7 @@ object DocGenerator:
         case l :: ls if l.trim.startsWith("//```") || l.trim.startsWith("// ```") =>
           val contents = cleanCodeBlock(snippet :+ l.replaceFirst("// ", "").replaceFirst("//", ""))
 
-          rec(ls, Nil, Nil, acc :+ contents.mkString("\n"))
+          rec(ls, Nil, Nil, acc :+ contents)
 
         // snippet middle
         case l :: ls if snippet.nonEmpty =>
@@ -170,6 +170,17 @@ object DocGenerator:
   /** Takes a list of strings representing lines of a markdown code block, and returns the code
     * block with excess leading whitespace removed, such that the indentation is preserved.
     */
-  def cleanCodeBlock(lines: List[String]): List[String] =
-    val indent = lines.map(_.takeWhile(_ == ' ').length).min
-    lines.map(_.drop(indent))
+  def cleanCodeBlock(lines: List[String]): String =
+    // Filter out code fence lines and empty lines when calculating minimum indent
+    val contentLines = lines.filterNot(line => line.trim.startsWith("```") || line.trim.isEmpty)
+
+    if contentLines.isEmpty then lines.mkString("\n") // If no content lines, return as-is
+    else
+      val indent = contentLines.map(_.takeWhile(_ == ' ').length).min
+      val cleanedLines = lines.map { line =>
+        if line.trim.isEmpty then line // Preserve empty lines as-is
+        else if line.trim.startsWith("```") then
+          line.trim            // Code fence lines should not be indented in markdown
+        else line.drop(indent) // Remove baseline indentation from content lines
+      }
+      cleanedLines.mkString("\n")

@@ -182,6 +182,89 @@ class DocGeneratorTests extends munit.FunSuite:
     assertEquals(actual, expected)
   }
 
+  test(
+    "code snippet with indented code at the end of a doc should unindent to the baseline correctly"
+  ) {
+    val input =
+      """
+      |
+      |    // ```scala
+      |    val clip: Clip[Material.Bitmap] =
+      |      Clip(Size(64, 128), ClipSheet(9, FPS(10)), ClipPlayMode.default, Assets.assets.FlagMaterial)
+      |
+      |    Outcome(SceneUpdateFragment(clip))
+      |    // ```
+      |
+      |""".stripMargin
+
+    val lines =
+      input.split("\n").toList
+
+    val actual = DocGenerator.extractComments(lines)
+
+    val expected =
+      List(
+        """```scala
+        |val clip: Clip[Material.Bitmap] =
+        |  Clip(Size(64, 128), ClipSheet(9, FPS(10)), ClipPlayMode.default, Assets.assets.FlagMaterial)
+        |
+        |Outcome(SceneUpdateFragment(clip))
+        |```
+        |""".stripMargin.trim
+      )
+
+    assertEquals(actual, expected)
+  }
+
+  test("Code snippet whitespace should be reduced to the minimum") {
+    val input =
+      """
+      |    /** ## Encoding our animation as a `Signal`
+      |      *
+      |      * Let's encode our movement animation as a reusable, stateless signal.
+      |      */
+      |// ```scala
+      |    def calculateXPosition(from: Int, to: Int, over: Seconds): Signal[Int] =
+      |      Signal { t =>
+      |        val maxDuration: Double     = over.toDouble
+      |        val clampedTime: Double     = if (t.toDouble > maxDuration) maxDuration else t.toDouble
+      |        val distanceToMove: Double  = to - from
+      |        val pixelsPerSecond: Double = distanceToMove / maxDuration
+      |  
+      |        from + (pixelsPerSecond * clampedTime).toInt
+      |      }
+      |// ```
+      |
+      |""".stripMargin.trim
+
+    val lines =
+      input.split("\n").toList
+
+    val actual = DocGenerator.extractComments(lines)
+
+    val expected =
+      List(
+        """## Encoding our animation as a `Signal`
+        |
+        |Let's encode our movement animation as a reusable, stateless signal.
+        |""".stripMargin.trim,
+        """```scala
+        |def calculateXPosition(from: Int, to: Int, over: Seconds): Signal[Int] =
+        |  Signal { t =>
+        |    val maxDuration: Double     = over.toDouble
+        |    val clampedTime: Double     = if (t.toDouble > maxDuration) maxDuration else t.toDouble
+        |    val distanceToMove: Double  = to - from
+        |    val pixelsPerSecond: Double = distanceToMove / maxDuration
+        |  
+        |    from + (pixelsPerSecond * clampedTime).toInt
+        |  }
+        |```
+        |""".stripMargin.trim
+      )
+
+    assertEquals(actual, expected)
+  }
+
   test("code snippet with double indented code") {
     val input =
       """
