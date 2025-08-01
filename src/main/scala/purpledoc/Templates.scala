@@ -5,12 +5,18 @@ import purpledoc.datatypes.ProjectTree
 
 object Templates:
 
-  def cleanUpName(name: String): String =
-    name.replace("-", " ").capitalize
+  def cleanUpName(name: String, navigationMappings: Option[Map[String, String]]): String =
+    navigationMappings
+      .flatMap(_.get(name))
+      .getOrElse(name.replace("-", " ").capitalize)
 
 object HomePage {
 
-  def page(projectName: String, projectTree: ProjectTree) =
+  def page(
+      projectName: String,
+      projectTree: ProjectTree,
+      navigationMappings: Option[Map[String, String]]
+  ): String =
     "<!DOCTYPE html>" +
       html(
         head(title := s"$projectName Examples")(
@@ -27,18 +33,21 @@ object HomePage {
           ),
           div()(
             ul()(
-              projectTreeToHtml(projectTree)
+              projectTreeToHtml(projectTree, navigationMappings)
             )
           )
         )
       )
 
-  def projectTreeToHtml(projectTree: ProjectTree): Frag =
+  def projectTreeToHtml(
+      projectTree: ProjectTree,
+      navigationMappings: Option[Map[String, String]]
+  ): Frag =
     projectTree match {
       case ProjectTree.Branch(name, _, children) =>
-        li(Templates.cleanUpName(name))(
+        li(Templates.cleanUpName(name, navigationMappings))(
           ul()(
-            children.map(projectTreeToHtml)
+            children.map(projectTreeToHtml(_, navigationMappings))
           )
         )
 
@@ -46,7 +55,7 @@ object HomePage {
         val metadata = l.toMetadata
         li()(
           a(href := s"./${metadata.srcPath}")(
-            Templates.cleanUpName(name)
+            Templates.cleanUpName(name, navigationMappings)
           )
         )
 

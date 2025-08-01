@@ -25,7 +25,7 @@ object DocGenerator:
             os.read(wd / project.srcPath / "README.md") + "\n\n"
           else
             println("> No README.md found, using default header.")
-            s"# ${Templates.cleanUpName(project.name)}\n\n"
+            s"# ${Templates.cleanUpName(project.name, config.website.navigationMappings)}\n\n"
 
         val scalaFiles = os.walk(wd / project.srcPath).filter(_.ext == "scala")
 
@@ -58,7 +58,7 @@ object DocGenerator:
             .mkString("  - ", "\n  - ", "")
 
         val contents =
-          s"""# ${p.last.capitalize}
+          s"""# ${Templates.cleanUpName(p.last, config.website.navigationMappings)}
           |
           |$subdirs
           |""".stripMargin

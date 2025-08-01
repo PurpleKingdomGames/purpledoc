@@ -48,7 +48,8 @@ final case class WebSiteConfig(
     logo: Option[Logo],
     latestRelease: String,
     baseUrl: String,
-    navigationOrder: List[String]
+    navigationOrder: List[String],
+    navigationMappings: Option[Map[String, String]]
 ) derives YamlCodec
 
 final case class TopNavLogo(

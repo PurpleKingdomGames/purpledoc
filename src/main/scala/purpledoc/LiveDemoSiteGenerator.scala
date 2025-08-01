@@ -11,7 +11,8 @@ object LiveDemoSiteGenerator:
       liveDemos: os.Path,
       projects: ProjectTree,
       linkAll: Boolean,
-      projectKind: ProjectKind
+      projectKind: ProjectKind,
+      config: PurpleDocConfig
   ) =
     println("Building demo site...")
     val projectList = projects.toList.map(_.toMetadata)
@@ -76,5 +77,5 @@ object LiveDemoSiteGenerator:
     // Build an index page with links to all the sub folders
     os.write(
       liveDemos / "index.html",
-      HomePage.page(projectName, projects)
+      HomePage.page(projectName, projects, config.website.navigationMappings)
     )

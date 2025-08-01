@@ -78,7 +78,8 @@ object Main:
       paths.liveDemos,
       sortedProjectTree,
       !noLink,
-      config.projectKind
+      config.projectKind,
+      config
     )
 
     DocGenerator.generateDocs(wd, paths.generatedDocs, projectTree, config)
