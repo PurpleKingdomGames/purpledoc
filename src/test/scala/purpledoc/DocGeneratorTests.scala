@@ -410,7 +410,7 @@ class DocGeneratorTests extends munit.FunSuite:
       "This explains what happens after the code"
     )
 
-    val actual = DocGenerator.compileMarkdown(pageHeader, linksBlock, comments)
+    val actual = DocGenerator.compileMarkdown(pageHeader, "", linksBlock, comments)
 
     val expected =
       """# My Example Project
