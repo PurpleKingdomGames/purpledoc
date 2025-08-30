@@ -39,7 +39,7 @@ object DocGenerator:
         val scalaFiles = os.walk(wd / project.srcPath).filter(_.ext == "scala")
 
         val demoId   = "live-demo"
-        val demoHref = configWithOverrides.website.baseUrl + "live_demos/" + project.liveDemoHref + "index.html"
+        val demoHref = "/live_demos/" + project.liveDemoHref + "index.html"
 
         val demoDivStyles =
           List(
