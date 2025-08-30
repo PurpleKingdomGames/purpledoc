@@ -24,23 +24,73 @@ object DocGenerator:
           if os.exists(wd / project.srcPath / "README.md") then
             os.read(wd / project.srcPath / "README.md") + "\n\n"
           else
-            println("> No README.md found, using default header.")
+            println("  - No README.md found, using default header.")
             s"# ${Templates.cleanUpName(project.name, config.website.navigationMappings)}\n\n"
+
+        val configWithOverrides =
+          PurpleDemoConfig.load(wd / project.srcPath) match
+            case Some(demo) =>
+              println("  - Config overrides found.")
+              config.overrideDemoConfig(demo)
+
+            case None =>
+              config
 
         val scalaFiles = os.walk(wd / project.srcPath).filter(_.ext == "scala")
 
+        val demoId   = "live-demo"
+        val demoHref = configWithOverrides.website.baseUrl + "/live_demos/" + project.liveDemoHref
+
+        val demoDivStyles =
+          List(
+            "border:2px solid #e400ff",
+            s"width:${configWithOverrides.demo.width}px",
+            s"height:${configWithOverrides.demo.height}px",
+            "background:#a888db33",
+            "color: #e400ff",
+            "display:flex",
+            "align-items:center",
+            "justify-content:center",
+            "cursor:pointer"
+          ).mkString("", ";", ";")
+
+        val demoBlock =
+          if configWithOverrides.demo.isHidden then ""
+          else {
+            s"""
+            |## Demo
+            |
+            |<div id="$demoId" style="$demoDivStyles">
+            |  ▶  Click to play
+            |</div>
+            |
+            |<script>
+            |  document.getElementById("$demoId").addEventListener("click", function() {
+            |    this.innerHTML = '<iframe width="${configWithOverrides.demo.width - 4}" height="${configWithOverrides.demo.height - 4}" src="$demoHref" frameborder="0" allow="autoplay; encrypted-media" scrolling="no"></iframe>';
+            |  });
+            |</script>
+            |
+            |""".stripMargin
+          }
+
+        val demoLink =
+          if configWithOverrides.demo.isHidden then
+            println("  - Demo will be hidden.")
+            ""
+          else s"""  - [Live demo](${demoHref})"""
+
         val linksBlock =
           s"""
-          |## Example Links
+          |## Links
           |
-          |  - [View example code](${config.docsRepo.editBaseUrl + "/" + project.editHref})
-          |  - [Live demo](${config.website.baseUrl + "/live_demos/" + project.liveDemoHref})
+          |  - [View example code](${configWithOverrides.docsRepo.editBaseUrl + "/" + project.editHref})
+          |${demoLink}
           |
           |""".stripMargin
 
         val comments = scalaFiles.flatMap(file => extractComments(os.read.lines(file).toList))
 
-        val contents = compileMarkdown(pageHeader, linksBlock, comments.toList)
+        val contents = compileMarkdown(pageHeader, demoBlock, linksBlock, comments.toList)
 
         os.makeDir.all(generatedDocsOut / project.srcPath)
         os.write.over(generatedDocsOut / project.srcPath / "README.md", contents)
@@ -88,8 +138,13 @@ object DocGenerator:
           os.write.over(p / "directory.conf", directoryConf)
     }
 
-  def compileMarkdown(pageHeader: String, linksBlock: String, comments: List[String]): String =
-    pageHeader + linksBlock + comments.mkString("\n\n")
+  def compileMarkdown(
+      pageHeader: String,
+      demoBlock: String,
+      linksBlock: String,
+      comments: List[String]
+  ): String =
+    pageHeader + demoBlock + linksBlock + comments.mkString("\n\n")
 
   def extractComments(lines: List[String]): List[String] =
     @tailrec

@@ -21,8 +21,19 @@ Point (2) was really the starting notion of the project. The idea is that rather
 The repo you plan to document needs three things:
 
 1. It must be a Mill project.
-2. It must have a purpledoc.yaml file at its root.
+2. It must have a `purpledoc.yaml` file at its root.
 3. It must contain Indigo (or soon Tyrian) projects, arranged in a tree.
+
+### Optional additions
+
+You can also include a `purpledemo.yaml` file in the root of any given example, next to the local `README.md`. This file contains overrides for the global demo config, to alter the details for this specific demo. The contents are as follows:
+
+```yaml
+demo:
+  width: 640
+  height: 480
+  hidden: true # Optional, defaults to 'false'
+```
 
 ## Running purpledoc
 

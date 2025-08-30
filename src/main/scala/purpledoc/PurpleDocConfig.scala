@@ -13,6 +13,7 @@ object PurpleDocConfig:
         case Left(value) =>
           println(s"Error parsing purpledoc config '$configFileName': $value")
           sys.exit(1)
+
         case Right(value) =>
           value
     else
@@ -26,12 +27,17 @@ final case class PurpleDocConfig(
     website: WebSiteConfig,
     repo: RepoConfig,
     docsRepo: RepoConfig,
-    discord: DiscordConfig
+    discord: DiscordConfig,
+    demo: DemoConfig
 ) derives YamlCodec:
+
   def projectKind: ProjectKind = kind match
     case "indigo" => ProjectKind.Indigo
     case "tyrian" => ProjectKind.Tyrian
     case _        => sys.error(s"Unknown project kind: $kind")
+
+  def overrideDemoConfig(demo: PurpleDemoConfig): PurpleDocConfig =
+    this.copy(demo = demo.demo)
 
 enum ProjectKind derives YamlCodec:
   case Indigo
@@ -72,3 +78,12 @@ final case class DiscordConfig(
     name: String,
     url: String
 ) derives YamlCodec
+
+final case class DemoConfig(
+    width: Int,
+    height: Int,
+    hidden: Option[Boolean]
+) derives YamlCodec:
+  val isHidden: Boolean =
+    hidden.getOrElse(false)
+

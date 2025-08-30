@@ -48,6 +48,7 @@ object WebsiteGenerator:
       .from(Markdown)
       .to(HTML)
       .using(Markdown.GitHubFlavor, SyntaxHighlighting)
+      .withRawContent
       .parallel[IO]
       .withTheme(theme(config))
       .build
