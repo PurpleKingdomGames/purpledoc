@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: coursier/cache-action@v6
+
+      - uses: VirtusLab/scala-cli-setup@v1
+        with:
+          power: true
+          jvm: temurin:17
+
+      - name: Run CI checks
+        run: bash ci.sh
