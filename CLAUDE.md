@@ -6,17 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Purpledoc is a CLI tool for building documentation sites for Purple Kingdom Games' open-source Scala projects (Indigo game engine and Tyrian web framework). It generates documentation from working example code and creates live interactive demos.
 
+## Build System
+
+This is a **Scala-CLI** project (not sbt or Mill). The central configuration file is `project.scala`, which declares the Scala version and all dependencies. Use `scala-cli --power dependency-update --all .` to check for newer dependency versions.
+
 ## Build Commands
 
 ```bash
-# Build JAR
-./build.sh
+# Build JAR (Linux/macOS)
+bash build.sh
+
+# Build JAR (Windows/PowerShell)
+powershell -File build.ps1
 
 # Run tests
-scala-cli test .
+scala-cli test --server=false .
+
+# Run CI checks locally (fmt + scalafix + tests)
+bash ci.sh
 
 # Run directly (development)
-scala-cli . -- --input ./path/to/target/repo --nolink
+scala-cli --server=false . -- --input ./path/to/target/repo --nolink
 
 # Run from JAR
 java -jar purpledoc.jar --input . --nolink
@@ -25,9 +35,16 @@ java -jar purpledoc.jar --input . --nolink
 purpledoc -i . -p colour,noise
 ```
 
-## Code Formatting
+**Note:** `--server=false` bypasses the Bloop compilation server, which is currently incompatible with Scala 3.8.x's multi-JAR sbt bridge.
 
-Uses Scalafmt (configured in `.scalafmt.conf`). Key settings: Scala 3, maxColumn=100.
+## CI
+
+GitHub Actions workflow in `.github/workflows/ci.yml` runs on push/PR to `main`. It executes `ci.sh` which checks formatting (scalafmt), linting (scalafix), and runs tests. Run `bash ci.sh` locally to verify before pushing.
+
+## Code Formatting and Linting
+
+- **Scalafmt** (v3.10.7, configured in `.scalafmt.conf`). Key settings: Scala 3, maxColumn=100. Run `scala-cli fmt .` to format, `scala-cli fmt --check .` to verify.
+- **Scalafix** (configured in `.scalafix.conf`). Rules: DisableSyntax, RedundantSyntax. Run `scala-cli --power fix --server=false .` to apply, add `--check` to verify.
 
 ## Architecture
 
@@ -51,6 +68,8 @@ The build pipeline flows through these stages:
 `Templates.scala` contains HTML templates for Indigo and Tyrian demo pages, using Scalatags for type-safe HTML generation.
 
 ## Dependencies
+
+Versions are declared in `project.scala`.
 
 - **os-lib** - File I/O and process execution
 - **scalatags** - HTML generation
