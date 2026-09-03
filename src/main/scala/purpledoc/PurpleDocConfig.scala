@@ -86,4 +86,3 @@ final case class DemoConfig(
 ) derives YamlCodec:
   val isHidden: Boolean =
     hidden.getOrElse(false)
-

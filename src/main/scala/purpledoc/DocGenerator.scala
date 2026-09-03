@@ -231,7 +231,7 @@ object DocGenerator:
 
     if contentLines.isEmpty then lines.mkString("\n") // If no content lines, return as-is
     else
-      val indent = contentLines.map(_.takeWhile(_ == ' ').length).min
+      val indent       = contentLines.map(_.takeWhile(_ == ' ').length).min
       val cleanedLines = lines.map { line =>
         if line.trim.isEmpty then line // Preserve empty lines as-is
         else if line.trim.startsWith("```") then

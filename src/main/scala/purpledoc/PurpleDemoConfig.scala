@@ -16,8 +16,7 @@ object PurpleDemoConfig:
 
         case Right(value) =>
           Option(value)
-    else
-      None
+    else None
 
 final case class PurpleDemoConfig(
     demo: DemoConfig
