@@ -55,7 +55,29 @@ final case class WebSiteConfig(
     latestRelease: String,
     baseUrl: String,
     navigationOrder: List[String],
-    navigationMappings: Option[Map[String, String]]
+    navigationMappings: Option[Map[String, String]],
+    projectLinks: Option[List[ProjectLinkConfig]],
+    teasers: Option[List[TeaserConfig]]
+) derives YamlCodec:
+
+  /** Joins a path onto the site's base url, tolerating a trailing slash on either side. */
+  def siteUrl(path: String): String =
+    baseUrl.stripSuffix("/") + "/" + path.stripPrefix("/")
+
+  val landingPageProjectLinks: List[ProjectLinkConfig] =
+    projectLinks.getOrElse(Nil)
+
+  val landingPageTeasers: List[TeaserConfig] =
+    teasers.getOrElse(Nil)
+
+final case class ProjectLinkConfig(
+    label: String,
+    url: String
+) derives YamlCodec
+
+final case class TeaserConfig(
+    title: String,
+    description: String
 ) derives YamlCodec
 
 final case class TopNavLogo(

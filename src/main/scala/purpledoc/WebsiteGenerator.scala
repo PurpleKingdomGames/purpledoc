@@ -121,7 +121,7 @@ object WebsiteGenerator:
             IconLink.internal(Root / "documentation" / "README.md", HeliumIcon.home)
         },
         navLinks = Seq(
-          ButtonLink.external(config.website.baseUrl + "live_demos", "Live Demos"),
+          ButtonLink.external(config.website.siteUrl("live_demos"), "Live Demos"),
           ButtonLink.external(config.discord.url, config.discord.name),
           ButtonLink.external(config.repo.url, config.repo.name)
         )
@@ -172,8 +172,14 @@ object WebsiteGenerator:
           LinkPanel(
             "User Guide",
             TextLink.internal(Root / "documentation" / "README.md", "Documentation"),
-            TextLink.external(config.website.baseUrl + "/" + "live_demos", "Live Demos")
+            TextLink.external(config.website.siteUrl("live_demos"), "Live Demos")
           )
-        )
+        ),
+        projectLinks = config.website.landingPageProjectLinks.map { link =>
+          TextLink.external(link.url, link.label)
+        },
+        teasers = config.website.landingPageTeasers.map { teaser =>
+          Teaser(teaser.title, teaser.description)
+        }
       )
       .build
